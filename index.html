@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบบันทึกแผนการผลิต</title>
+    <title>ระบบบันทึกแผนการผลิต ALC</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,22 +18,22 @@
         :root {
             --orange-primary: #e67e22;
             --orange-dark: #d35400;
-            --orange-light: #fdebd0;
-            --dark-primary: #2c3e50;
-            --dark-secondary: #34495e;
-            --gray-dark: #7f8c8d;
-            --gray-medium: #95a5a6;
-            --gray-light: #bdc3c7;
-            --gray-lighter: #ecf0f1;
+            --orange-light: #fff3e0;
+            --dark-primary: #1e293b;
+            --dark-secondary: #334155;
+            --gray-dark: #64748b;
+            --gray-medium: #94a3b8;
+            --gray-light: #cbd5e1;
+            --gray-lighter: #f1f5f9;
             --white: #ffffff;
-            --success: #27ae60;
-            --danger: #e74c3c;
-            --warning: #f39c12;
-            --border-radius: 12px;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
-            --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
-            --shadow-lg: 0 20px 40px rgba(0,0,0,0.15);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border-radius: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.25s ease-in-out;
         }
 
         * {
@@ -43,28 +43,29 @@
         }
 
         body {
-            font-family: 'Sarabun', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--dark-primary) 0%, var(--dark-secondary) 50%, #1a252f 100%);
+            font-family: 'Sarabun', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
             min-height: 100vh;
-            padding: 20px;
-            color: #333;
+            color: #334155;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Material Icons Global Alignment */
+        /* Material Icons Global */
         .material-symbols-outlined {
             vertical-align: middle;
             font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
         }
 
-        /* Connection Status Chip */
+        /* Connection Status */
         .connection-status {
             position: fixed;
-            top: 16px;
-            right: 16px;
+            bottom: 20px;
+            right: 20px;
             padding: 8px 16px;
             border-radius: 20px;
             color: var(--white);
-            font-weight: 600;
+            font-weight: 500;
             font-size: 13px;
             z-index: 1000;
             transition: var(--transition);
@@ -80,136 +81,174 @@
         .connection-status.testing { background-color: var(--warning); }
         .connection-status.testing .material-symbols-outlined { animation: spin 1s linear infinite; }
 
-        /* Container */
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            background: var(--white);
-            border-radius: 16px;
-            box-shadow: var(--shadow-lg);
-            overflow: hidden;
-        }
-
-        /* Header */
+        /* Compact Header */
         .header {
-            background: linear-gradient(135deg, var(--orange-primary) 0%, var(--orange-dark) 100%);
-            padding: 32px 30px;
-            text-align: center;
+            background: linear-gradient(90deg, var(--dark-primary) 0%, var(--dark-secondary) 100%);
+            padding: 12px 24px;
             color: var(--white);
-            position: relative;
-            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-md);
+            z-index: 10;
         }
-        .header::before, .header::after {
-            content: '';
-            position: absolute;
-            background: rgba(255,255,255,0.05);
-            border-radius: 50%;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .header::before { top: -50%; right: -20%; width: 300px; height: 300px; }
-        .header::after { bottom: -60%; left: -10%; width: 250px; height: 250px; }
-        
         .header-icon {
-            font-size: 48px;
-            margin-bottom: 8px;
-            display: inline-block;
+            font-size: 28px;
+            color: var(--orange-primary);
+            background: rgba(255,255,255,0.1);
+            padding: 6px;
+            border-radius: 8px;
         }
         .header h1 {
-            font-size: 2em;
-            font-weight: 700;
-            margin-bottom: 6px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-            position: relative;
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         .header p {
-            font-size: 0.95em;
-            opacity: 0.9;
+            font-size: 0.85rem;
+            color: var(--gray-light);
             font-weight: 300;
-            position: relative;
+        }
+        
+        /* Main Container - Fluid Width */
+        .main-wrapper {
+            flex: 1;
+            padding: 16px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Tabs */
+        .container {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header Toolbar (Tabs + Filters) */
+        .header-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-lighter);
+            flex-wrap: wrap; /* Allows wrapping on small screens */
+            padding-right: 16px;
+        }
+
+        /* Tabs - Modernized */
         .tabs {
             display: flex;
-            background: var(--gray-lighter);
-            padding: 12px 20px 0;
-            gap: 4px;
         }
         .tab {
-            flex: 1;
-            max-width: 200px;
             padding: 14px 24px;
-            text-align: center;
             background: transparent;
             border: none;
+            border-bottom: 3px solid transparent;
             cursor: pointer;
             font-size: 15px;
             font-weight: 600;
             color: var(--gray-dark);
             transition: var(--transition);
-            border-radius: 10px 10px 0 0;
             font-family: inherit;
-            position: relative;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 8px;
         }
-        .tab .material-symbols-outlined { font-size: 20px; }
-        .tab.active {
-            background: var(--white);
+        .tab:hover {
             color: var(--orange-primary);
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            background: var(--gray-lighter);
         }
-        .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 20%;
-            right: 20%;
-            height: 3px;
-            background: var(--orange-primary);
-            border-radius: 3px 3px 0 0;
+        .tab.active {
+            color: var(--orange-primary);
+            border-bottom-color: var(--orange-primary);
+            background: var(--orange-light);
         }
-        .tab:hover:not(.active) {
-            background: rgba(255,255,255,0.6);
+
+        /* Filters Section (Compact & Inline) */
+        .filter-section {
+            display: none; /* Hidden by default, shown by JS on Tab 2 */
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            padding: 8px 0;
+        }
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .filter-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-dark);
+            white-space: nowrap;
+        }
+        .filter-group select {
+            padding: 4px 8px;
+            border: 1px solid var(--gray-light);
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: inherit;
+            height: 30px;
+            background: var(--white);
+        }
+        .btn-filter-clear {
+            padding: 4px 10px;
+            background: var(--gray-lighter);
+            border: 1px solid var(--gray-light);
             color: var(--dark-primary);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
+            height: 30px;
+            font-weight: 600;
         }
+        .btn-filter-clear:hover { background: #e2e8f0; }
 
         /* Tab Content */
         .tab-content {
             display: none;
-            padding: 30px;
-            animation: fadeIn 0.3s ease;
+            padding: 20px;
+            animation: fadeIn 0.4s ease;
+            flex: 1;
+            overflow-y: auto;
         }
         .tab-content.active { display: block; }
+        
+        #data-tab.active {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevent outer scroll, let table-wrapper scroll */
+        }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Section Title */
-        .section-title {
-            font-size: 1.3em;
-            font-weight: 700;
-            color: var(--dark-primary);
-            margin-bottom: 24px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--gray-lighter);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Form Grid */
+        /* Form Layout */
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px 24px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px 20px;
+            margin-bottom: 20px;
         }
-
-        /* Form Group */
-        .form-group { margin-bottom: 4px; }
+        
         .form-group label {
             display: flex;
             align-items: center;
@@ -217,7 +256,7 @@
             margin-bottom: 6px;
             font-weight: 600;
             color: var(--dark-secondary);
-            font-size: 14px;
+            font-size: 13px;
         }
         .form-group label .material-symbols-outlined { font-size: 16px; color: var(--gray-dark); }
         .form-group label .required { color: var(--danger); }
@@ -226,1116 +265,974 @@
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 11px 14px;
-            border: 2px solid var(--gray-lighter);
-            border-radius: 8px;
-            font-size: 15px;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-light);
+            border-radius: 6px;
+            font-size: 14px;
             font-family: inherit;
             transition: var(--transition);
             background: var(--white);
-            color: #333;
+            color: var(--dark-primary);
         }
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: var(--orange-primary);
-            box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.12);
+            box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.15);
         }
         .form-group input[readonly] {
-            background-color: #f8f9fa;
+            background-color: var(--gray-lighter);
             cursor: not-allowed;
             color: var(--gray-dark);
+            border-color: transparent;
         }
-        .form-group textarea { resize: vertical; min-height: 72px; }
-        .form-group small {
-            color: var(--gray-dark);
-            font-size: 12px;
-            margin-top: 4px;
-            display: block;
-        }
-
-        /* Computed field highlight */
-        .computed-field input {
-            background: linear-gradient(135deg, #fef9f3 0%, #f8f9fa 100%) !important;
-            border-style: dashed;
-        }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        
         .computed-badge {
-            display: inline-block;
             background: var(--orange-light);
             color: var(--orange-dark);
-            font-size: 11px;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 10px;
-            margin-left: 6px;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: auto;
         }
 
-        /* Textarea Section */
-        .textarea-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px 24px;
-            margin-bottom: 24px;
-        }
-
-        /* Submit Button */
         .submit-btn {
-            background: linear-gradient(135deg, var(--dark-primary) 0%, var(--dark-secondary) 100%);
+            background: var(--orange-primary);
             color: var(--white);
-            padding: 14px 30px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 10px;
-            font-size: 17px;
-            font-weight: 700;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
-            width: 100%;
-            font-family: inherit;
-            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            width: max-content;
+            margin-top: 10px;
         }
-        .submit-btn:hover {
-            background: linear-gradient(135deg, var(--orange-primary) 0%, var(--orange-dark) 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(230, 126, 34, 0.35);
-        }
-        .submit-btn:active { transform: translateY(0); }
-        .submit-btn:disabled {
-            background: var(--gray-medium);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
+        .submit-btn:hover { background: var(--orange-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); }
 
-        /* Data Table */
+        /* Data Table Header Toolbar */
         .table-toolbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            gap: 12px;
+            margin-bottom: 12px;
         }
-        .table-toolbar .record-count {
-            font-size: 14px;
-            color: var(--gray-dark);
+        .record-count {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--dark-primary);
         }
         .refresh-btn {
-            background: var(--orange-primary);
-            color: var(--white);
-            border: none;
-            padding: 8px 18px;
-            border-radius: 8px;
-            font-size: 14px;
+            background: var(--white);
+            color: var(--dark-primary);
+            border: 1px solid var(--gray-light);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            font-family: inherit;
-            transition: var(--transition);
             display: flex;
             align-items: center;
             gap: 6px;
+            transition: var(--transition);
         }
-        .refresh-btn .material-symbols-outlined { font-size: 18px; }
-        .refresh-btn:hover {
-            background: var(--orange-dark);
-            transform: translateY(-1px);
-        }
+        .refresh-btn:hover { background: var(--gray-lighter); }
 
-        .table-container {
-            overflow-x: auto;
-            max-height: 600px;
-            border-radius: 10px;
+        /* Full Width Table */
+        .table-wrapper {
+            flex: 1; 
+            overflow: auto;
             border: 1px solid var(--gray-lighter);
-            box-shadow: var(--shadow-sm);
+            border-radius: 6px 6px 0 0; /* Flat bottom for pagination attach */
+            background: var(--white);
+            max-height: calc(100vh - 250px); 
         }
 
         .data-table {
             width: 100%;
-            border-collapse: collapse;
-            font-size: 0.82rem;
-            white-space: nowrap;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 11.5px; /* Reduced font size */
+            min-width: 1200px;
+            table-layout: fixed; /* For better resizable columns */
         }
+        
         .data-table thead {
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 5;
         }
+        
         .data-table th {
-            background: linear-gradient(135deg, var(--dark-primary) 0%, var(--dark-secondary) 100%);
+            background: var(--dark-primary);
             color: var(--white);
-            font-weight: 600;
-            font-size: 0.78rem;
-            padding: 12px 14px;
+            font-weight: 500;
+            padding: 8px 10px; /* Reduced padding */
             text-align: left;
             border-bottom: 2px solid var(--orange-primary);
-            letter-spacing: 0.3px;
+            border-right: 1px solid rgba(255,255,255,0.1);
             cursor: pointer;
             user-select: none;
+            white-space: nowrap;
             transition: background 0.2s;
+            position: relative; /* For resizer absolute positioning */
         }
+        .data-table th:last-child { border-right: none; }
         .data-table th:hover { background: var(--dark-secondary); }
         .data-table th .th-content {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 4px;
+            overflow: hidden;
         }
-        .data-table th .sort-icon {
-            font-size: 14px;
-            opacity: 0.4;
-            transition: opacity 0.2s;
+        .data-table th .th-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .data-table th.active-sort .sort-icon {
-            opacity: 1;
-            color: var(--orange-light);
+        .data-table th .sort-icon { font-size: 14px; opacity: 0.3; flex-shrink: 0; }
+        .data-table th.active-sort .sort-icon { opacity: 1; color: var(--orange-primary); }
+
+        /* Column Resizer Handle */
+        .resizer {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            cursor: col-resize;
+            user-select: none;
+            z-index: 10;
+        }
+        .resizer:hover, .resizing {
+            background-color: var(--orange-primary);
+            opacity: 0.8;
         }
 
         .data-table td {
-            padding: 10px 14px;
-            text-align: left;
-            border-bottom: 1px solid #f0f0f0;
-            max-width: 160px;
+            padding: 8px 10px; /* Reduced padding */
+            border-bottom: 1px solid var(--gray-lighter);
+            border-right: 1px dashed var(--gray-lighter);
+            color: #334155;
+            white-space: normal; 
+            vertical-align: middle;
+            word-break: break-word;
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            color: #444;
         }
-        .data-table tbody tr { transition: background 0.15s ease; }
-        .data-table tbody tr:nth-child(even) { background: #fafafa; }
-        .data-table tbody tr:hover { background: var(--orange-light); }
-        .data-table td.num {
-            text-align: right;
-            font-variant-numeric: tabular-nums;
-            font-weight: 500;
-        }
+        .data-table td:last-child { border-right: none; }
+        
+        /* specific initial column widths to help layout */
+        .col-id { width: 40px; text-align: center; }
+        .col-date { width: 90px; }
+        .col-name { width: 120px; }
+        .col-rep { width: 150px; }
+        .col-region { width: 80px; }
+        .col-type { width: 70px; }
+        .col-thick { width: 60px; text-align: right; font-variant-numeric: tabular-nums;}
+        .col-qty { width: 80px; text-align: right; font-variant-numeric: tabular-nums; }
+        .col-plant { width: 120px; }
+        .col-area { width: 80px; text-align: right; font-variant-numeric: tabular-nums; }
+        .col-molds { width: 70px; text-align: right; font-variant-numeric: tabular-nums; }
+        .col-round { width: 90px; }
+        .col-urgent { width: 220px; } /* Wider urgent column */
+        .col-notes { width: auto; min-width: 150px; }
+        
+        .data-table tbody tr { transition: background-color 0.15s; }
+        .data-table tbody tr:hover { background-color: var(--orange-light); }
 
-        /* Urgent badge */
+        /* Pagination Controls */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            background: var(--white);
+            border: 1px solid var(--gray-lighter);
+            border-top: none; /* Connects smoothly to table above */
+            border-radius: 0 0 6px 6px;
+            font-size: 13px;
+            color: var(--dark-secondary);
+        }
+        .pagination-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .rows-per-page {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .rows-per-page select {
+            padding: 4px 8px;
+            border: 1px solid var(--gray-light);
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+        .page-buttons {
+            display: flex;
+            gap: 6px;
+        }
+        .btn-page {
+            background: var(--white);
+            border: 1px solid var(--gray-light);
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            color: var(--dark-secondary);
+            transition: var(--transition);
+        }
+        .btn-page:hover:not(:disabled) { 
+            background: var(--gray-lighter); 
+            color: var(--dark-primary);
+        }
+        .btn-page:disabled { 
+            opacity: 0.4; 
+            cursor: not-allowed; 
+        }
+        
+        /* Badges */
         .urgent-badge {
             display: inline-flex;
             align-items: center;
             gap: 4px;
             background: var(--danger);
             color: var(--white);
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 12px;
-            max-width: 140px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .urgent-badge .material-symbols-outlined { font-size: 12px; }
-        .urgent-normal {
-            display: inline-block;
-            background: var(--gray-lighter);
-            color: var(--gray-dark);
-            font-size: 11px;
-            font-weight: 500;
-            padding: 3px 10px;
-            border-radius: 12px;
-        }
-
-        /* Footer */
-        .app-footer {
-            background: var(--gray-lighter);
-            padding: 14px 30px;
-            text-align: center;
-            font-size: 12px;
-            color: var(--gray-dark);
-            border-top: 1px solid #ddd;
-        }
-        .app-footer .shortcut-keys {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .app-footer kbd {
-            background: var(--white);
-            border: 1px solid var(--gray-light);
-            border-radius: 4px;
             padding: 2px 6px;
-            font-size: 11px;
-            font-family: monospace;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+            border-radius: 12px;
         }
+        .urgent-normal { color: var(--gray-light); }
 
-        /* Loading Spinner */
+        /* Loading & Empty */
         .loading-spinner {
-            border: 4px solid var(--gray-light);
-            border-top: 4px solid var(--orange-primary);
+            border: 3px solid var(--gray-lighter);
+            border-top: 3px solid var(--orange-primary);
             border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            animation: spin 0.8s linear infinite;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
             margin: 0 auto;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        .empty-state { text-align: center; padding: 40px; color: var(--gray-dark); }
+        .empty-state .material-symbols-outlined { font-size: 40px; opacity: 0.5; margin-bottom: 8px; }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--gray-dark);
-        }
-        .empty-state .material-symbols-outlined {
-            font-size: 48px;
-            margin-bottom: 12px;
-            color: var(--gray-light);
-        }
-
-        /* Sweet Alert Custom */
-        .swal2-popup {
-            font-family: 'Sarabun', 'Segoe UI', sans-serif !important;
-            border-radius: 14px !important;
-        }
-        .swal2-confirm {
-            background: linear-gradient(135deg, var(--orange-primary) 0%, var(--orange-dark) 100%) !important;
-            border: none !important;
-            padding: 10px 28px !important;
-            font-size: 15px !important;
-            font-weight: 600 !important;
-            border-radius: 8px !important;
-            font-family: inherit !important;
-        }
-        .swal2-cancel {
-            background: linear-gradient(135deg, var(--gray-medium) 0%, var(--gray-dark) 100%) !important;
-            border: none !important;
-            padding: 10px 28px !important;
-            font-size: 15px !important;
-            font-weight: 600 !important;
-            border-radius: 8px !important;
-            font-family: inherit !important;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            .header { padding: 24px 16px; }
-            .header h1 { font-size: 1.5em; }
-            .tab-content { padding: 20px 16px; }
-            .form-grid { grid-template-columns: 1fr; gap: 12px; }
-            .textarea-section { grid-template-columns: 1fr; }
-            .tabs { padding: 8px 12px 0; }
-            .tab { padding: 12px 16px; font-size: 14px; }
-            .data-table { font-size: 0.72rem; }
-            .data-table th { font-size: 0.68rem; padding: 8px 8px; }
-            .data-table td { padding: 8px 8px; max-width: 100px; }
-            .connection-status { top: 10px; right: 10px; font-size: 11px; padding: 6px 12px; }
-        }
     </style>
 </head>
 <body>
-    <div id="connectionStatus" class="connection-status testing">
-        <span class="material-symbols-outlined">sync</span> กำลังตรวจสอบ...
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <span class="material-symbols-outlined header-icon">precision_manufacturing</span>
+            <div>
+                <h1>ระบบบันทึกแผนการผลิต ALC</h1>
+            </div>
+        </div>
+        <div>
+            <p>Production Plan System</p>
+        </div>
+    </header>
+
+    <div class="main-wrapper">
+        <div class="container">
+            <!-- Header Toolbar: Tabs + Filters Inline -->
+            <div class="header-toolbar">
+                <div class="tabs">
+                    <button class="tab active" data-tab="form" onclick="showTab('form', this)">
+                        <span class="material-symbols-outlined">edit_document</span> บันทึกข้อมูล
+                    </button>
+                    <button class="tab" data-tab="data" onclick="showTab('data', this)">
+                        <span class="material-symbols-outlined">table_view</span> ดูข้อมูล
+                    </button>
+                </div>
+                
+                <!-- Filter Section (Hidden on Form Tab) -->
+                <div class="filter-section" id="filterSection">
+                    <div class="filter-group">
+                        <label>ปี</label>
+                        <select id="filterYear" onchange="applyFilters()"><option value="">ทั้งหมด</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <label>เดือน</label>
+                        <select id="filterMonth" onchange="applyFilters()">
+                            <option value="">ทั้งหมด</option>
+                            <option value="1">มค.</option><option value="2">กพ.</option><option value="3">มีค.</option>
+                            <option value="4">เมย.</option><option value="5">พค.</option><option value="6">มิย.</option>
+                            <option value="7">กค.</option><option value="8">สค.</option><option value="9">กย.</option>
+                            <option value="10">ตค.</option><option value="11">พย.</option><option value="12">ธค.</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>พื้นที่</label>
+                        <select id="filterRegion" onchange="applyFilters()"><option value="">ทั้งหมด</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <label>ชนิดสินค้า</label>
+                        <select id="filterProduct" onchange="applyFilters()"><option value="">ทั้งหมด</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <label>โรงงาน</label>
+                        <select id="filterPlant" onchange="applyFilters()"><option value="">ทั้งหมด</option></select>
+                    </div>
+                    <button class="btn-filter-clear" onclick="clearFilters()" title="ล้างตัวกรอง">
+                        <span class="material-symbols-outlined" style="font-size:14px;">filter_alt_off</span> ล้าง
+                    </button>
+                </div>
+            </div>
+
+            <!-- TAB 1: บันทึกข้อมูล (สิ้นสุดที่ปุ่มบันทึก) -->
+            <div id="form-tab" class="tab-content active">
+                <form id="productionForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="completionTime"><span class="material-symbols-outlined">calendar_today</span> วันที่ <span class="required">*</span></label>
+                            <input type="datetime-local" id="completionTime" name="completionTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="name"><span class="material-symbols-outlined">person</span> ผู้บันทึก <span class="required">*</span></label>
+                            <input type="text" id="name" name="name" placeholder="ระบุชื่อผู้บันทึก" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="representative"><span class="material-symbols-outlined">storefront</span> ผู้แทนจำหน่าย <span class="required">*</span></label>
+                            <input type="text" id="representative" name="representative" placeholder="ระบุชื่อ" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="salesRegion"><span class="material-symbols-outlined">map</span> เขตการขาย (พื้นที่) <span class="required">*</span></label>
+                            <select id="salesRegion" name="salesRegion" required>
+                                <option value="">— เลือก —</option>
+                                <option value="M1 METRO">M1 METRO</option>
+                                <option value="M2 EAST">M2 EAST</option>
+                                <option value="M3 NORTH">M3 NORTH</option>
+                                <option value="M4 ESAN">M4 ESAN</option>
+                                <option value="M5 SOUTH">M5 SOUTH</option>
+                                <option value="M6 WEST">M6 WEST</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="productType"><span class="material-symbols-outlined">category</span> ชนิดสินค้า <span class="required">*</span></label>
+                            <select id="productType" name="productType" required>
+                                <option value="">— เลือก —</option>
+                                <option value="G2">G2</option><option value="G3">G3</option>
+                                <option value="G4">G4</option><option value="Easy">Easy</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="blockThickness"><span class="material-symbols-outlined">straighten</span> ความหนา <span class="required">*</span></label>
+                            <select id="blockThickness" name="blockThickness" required>
+                                <option value="">— เลือก —</option>
+                                <option value="7.5">7.5</option><option value="10">10</option>
+                                <option value="12.5">12.5</option><option value="15">15</option>
+                                <option value="17.5">17.5</option><option value="20">20</option>
+                                <option value="25">25</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity"><span class="material-symbols-outlined">tag</span> จำนวน (ก้อน) <span class="required">*</span></label>
+                            <input type="number" id="quantity" name="quantity" placeholder="ระบุจำนวนก้อน" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="plant"><span class="material-symbols-outlined">factory</span> โรงงาน <span class="required">*</span></label>
+                            <select id="plant" name="plant" required>
+                                <option value="">— เลือก —</option>
+                                <option value="บางปะอิน G901">บางปะอิน G901</option><option value="บางปะอิน G902">บางปะอิน G902</option>
+                                <option value="ระยอง H011">ระยอง H011</option><option value="ระยอง H012">ระยอง H012</option>
+                                <option value="หนองแค G911">หนองแค G911</option><option value="หนองแค G912">หนองแค G912</option>
+                                <option value="สงขลา G931">สงขลา G931</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="m2"><span class="material-symbols-outlined">square_foot</span> พื้นที่ (sq.m.)</label>
+                            <input type="number" step="0.01" id="m2" name="m2" placeholder="ระบุพื้นที่">
+                        </div>
+                        <div class="form-group">
+                            <label for="molds"><span class="material-symbols-outlined">view_module</span> Molds <span class="computed-badge">Auto</span></label>
+                            <input type="text" id="molds" name="molds" readonly tabindex="-1">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="productionRound"><span class="material-symbols-outlined">update</span> รอบผลิต</label>
+                            <input type="text" id="productionRound" name="productionRound" placeholder="ระบุรอบผลิต">
+                        </div>
+                        
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="urgentCase"><span class="material-symbols-outlined" style="color:var(--danger)">emergency</span> เคสด่วน</label>
+                            <input type="text" id="urgentCase" name="urgentCase" placeholder="ระบุเหตุผล (เฉพาะกรณีด่วนจริงๆ)">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="notes"><span class="material-symbols-outlined">notes</span> หมายเหตุ</label>
+                            <textarea id="notes" name="notes" placeholder="รายละเอียดเพิ่มเติม" style="min-height: 60px;"></textarea>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span class="material-symbols-outlined">save</span> บันทึกข้อมูล
+                    </button>
+                </form>
+            </div>
+
+            <!-- TAB 2: ดูข้อมูล -->
+            <div id="data-tab" class="tab-content">
+                
+                <div class="table-toolbar">
+                    <div class="record-count" id="recordCount">กำลังโหลด...</div>
+                    <button class="refresh-btn" onclick="loadData()">
+                        <span class="material-symbols-outlined" style="font-size: 16px;">refresh</span> รีเฟรชข้อมูล
+                    </button>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table class="data-table" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th class="col-id" onclick="sortTable('originalIndex')"><div class="th-content"><span class="th-text">#</span> <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
+                                <th class="col-date" onclick="sortTable('completionTime')"><div class="th-content"><span class="th-text">วันที่</span> <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
+                                <th class="col-name" onclick="sortTable('name')"><div class="th-content"><span class="th-text">ผู้บันทึก</span> <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
+                                <th class="col-rep" onclick="sortTable('representative')"><div class="th-content"><span class="th-text">ผู้แทนจำหน่าย</span> <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
+                                <th class="col-region" onclick="sortTable('salesRegion')"><div class="th-content"><span class="th-text">พื้นที่</span> <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
+                                <th class="col-type" onclick="sortTable('productType')"><div class="th-content"><span class="th-text">ชนิด</span> <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
+                                <th class="col-thick" onclick="sortTable('blockThickness')"><div class="th-content" style="justify-content:flex-end"><span class="th-text">หนา</span> <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
+                                <th class="col-qty" onclick="sortTable('quantity')"><div class="th-content" style="justify-content:flex-end"><span class="th-text">จำนวน</span> <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
+                                <th class="col-plant" onclick="sortTable('plant')"><div class="th-content"><span class="th-text">โรงงาน</span> <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
+                                <th class="col-area" onclick="sortTable('m2')"><div class="th-content" style="justify-content:flex-end"><span class="th-text">พื้นที่(sq.m)</span> <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
+                                <th class="col-molds" onclick="sortTable('molds')"><div class="th-content" style="justify-content:flex-end"><span class="th-text">Molds</span> <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
+                                <th class="col-round" onclick="sortTable('productionRound')"><div class="th-content"><span class="th-text">รอบผลิต</span> <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
+                                <th class="col-urgent" onclick="sortTable('urgentCase')"><div class="th-content"><span class="th-text">ด่วน</span> <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
+                                <th class="col-notes"><div class="th-content"><span class="th-text">หมายเหตุ</span></div></th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataTableBody">
+                            <tr>
+                                <td colspan="14" class="empty-state">
+                                    <span class="material-symbols-outlined">inbox</span>
+                                    <div>คลิกแท็บเพื่อโหลดข้อมูล</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination Controls -->
+                <div class="pagination-container" id="paginationControls" style="display: none;">
+                    <div class="pagination-info" id="pageInfo">แสดงรายการ</div>
+                    <div class="pagination-actions">
+                        <div class="rows-per-page">
+                            <label>แสดงหน้าละ:</label>
+                            <select id="pageSize" onchange="changePageSize()">
+                                <option value="100">100</option>
+                                <option value="1000">1000</option>
+                                <option value="all">ทั้งหมด</option>
+                            </select>
+                        </div>
+                        <div class="page-buttons">
+                            <button class="btn-page" id="btnPrevPage" onclick="changePage(-1)"><span class="material-symbols-outlined">chevron_left</span></button>
+                            <button class="btn-page" id="btnNextPage" onclick="changePage(1)"><span class="material-symbols-outlined">chevron_right</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <span class="material-symbols-outlined header-icon">factory</span>
-            <h1>ระบบบันทึกแผนการผลิต</h1>
-            <p>Production Plan Management System</p>
-        </div>
-
-        <!-- Tabs -->
-        <div class="tabs">
-            <button class="tab active" data-tab="form" onclick="showTab('form', this)">
-                <span class="material-symbols-outlined">edit_document</span> บันทึกข้อมูล
-            </button>
-            <button class="tab" data-tab="data" onclick="showTab('data', this)">
-                <span class="material-symbols-outlined">table_view</span> ดูข้อมูล
-            </button>
-        </div>
-
-        <!-- Form Tab -->
-        <div id="form-tab" class="tab-content active">
-            <div class="section-title">
-                <span class="material-symbols-outlined">content_paste</span> บันทึกข้อมูลแผนการผลิต
-            </div>
-            <form id="productionForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="completionTime">
-                            <span class="material-symbols-outlined">calendar_month</span> วันที่ <span class="required">*</span>
-                        </label>
-                        <input type="datetime-local" id="completionTime" name="completionTime" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="name">
-                            <span class="material-symbols-outlined">person</span> ผู้บันทึก <span class="required">*</span>
-                        </label>
-                        <input type="text" id="name" name="name" placeholder="ระบุชื่อผู้บันทึก" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="representative">
-                            <span class="material-symbols-outlined">storefront</span> ชื่อผู้แทนจำหน่าย <span class="required">*</span>
-                        </label>
-                        <input type="text" id="representative" name="representative" placeholder="ระบุชื่อผู้แทนจำหน่าย" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="salesRegion">
-                            <span class="material-symbols-outlined">map</span> เขตการขาย / ภาค <span class="required">*</span>
-                        </label>
-                        <select id="salesRegion" name="salesRegion" required>
-                            <option value="">— เลือกเขตการขาย —</option>
-                            <option value="M1 METRO">M1 METRO</option>
-                            <option value="M2 EAST">M2 EAST</option>
-                            <option value="M3 NORTH">M3 NORTH</option>
-                            <option value="M4 ESAN">M4 ESAN</option>
-                            <option value="M5 SOUTH">M5 SOUTH</option>
-                            <option value="M6 WEST">M6 WEST</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="productType">
-                            <span class="material-symbols-outlined">category</span> ชนิดสินค้า "G" <span class="required">*</span>
-                        </label>
-                        <select id="productType" name="productType" required>
-                            <option value="">— เลือกชนิดสินค้า —</option>
-                            <option value="G2">G2</option>
-                            <option value="G3">G3</option>
-                            <option value="G4">G4</option>
-                            <option value="Easy">Easy</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="blockThickness">
-                            <span class="material-symbols-outlined">straighten</span> ความหนา Block <span class="required">*</span>
-                        </label>
-                        <select id="blockThickness" name="blockThickness" required>
-                            <option value="">— เลือกความหนา —</option>
-                            <option value="7.5">7.5</option>
-                            <option value="10">10</option>
-                            <option value="12.5">12.5</option>
-                            <option value="15">15</option>
-                            <option value="17.5">17.5</option>
-                            <option value="20">20</option>
-                            <option value="25">25</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="quantity">
-                            <span class="material-symbols-outlined">tag</span> จำนวน (ก้อน) <span class="required">*</span>
-                        </label>
-                        <input type="number" id="quantity" name="quantity" placeholder="ระบุจำนวนก้อน" min="1" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="plant">
-                            <span class="material-symbols-outlined">domain</span> โรงงาน (Plant) <span class="required">*</span>
-                        </label>
-                        <select id="plant" name="plant" required>
-                            <option value="">— เลือกโรงงาน —</option>
-                            <option value="บางปะอิน G901">บางปะอิน G901</option>
-                            <option value="บางปะอิน G902">บางปะอิน G902</option>
-                            <option value="ระยอง H011">ระยอง H011</option>
-                            <option value="ระยอง H012">ระยอง H012</option>
-                            <option value="หนองแค G911">หนองแค G911</option>
-                            <option value="หนองแค G912">หนองแค G912</option>
-                            <option value="สงขลา G931">สงขลา G931</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group computed-field">
-                        <label for="m2">
-                            <span class="material-symbols-outlined">square_foot</span> พื้นที่ (sq.m.) <span class="computed-badge">คำนวณอัตโนมัติ</span>
-                        </label>
-                        <input type="text" id="m2" name="m2" readonly>
-                        <small>คำนวณจาก: จำนวน (ก้อน) × 0.2 × 0.6</small>
-                    </div>
-
-                    <div class="form-group computed-field">
-                        <label for="molds">
-                            <span class="material-symbols-outlined">view_module</span> Molds <span class="computed-badge">คำนวณอัตโนมัติ</span>
-                        </label>
-                        <input type="text" id="molds" name="molds" readonly>
-                        <small>คำนวณจาก: จำนวน (ก้อน) ÷ จำนวนก้อนต่อโมล</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="productionRound">
-                            <span class="material-symbols-outlined">event_repeat</span> รอบผลิต
-                        </label>
-                        <input type="date" id="productionRound" name="productionRound">
-                    </div>
-                </div>
-
-                <div class="textarea-section">
-                    <div class="form-group">
-                        <label for="urgentCase">
-                            <span class="material-symbols-outlined" style="color: var(--danger);">emergency</span> 
-                            เคสต้องการสินค้าด่วน <small style="font-weight:400;color:var(--gray-dark);">(เฉพาะที่ซีเรียสจริงๆ)</small>
-                        </label>
-                        <textarea id="urgentCase" name="urgentCase" placeholder="ระบุเฉพาะกรณีที่ต้องการสินค้าด่วนจริงๆ เท่านั้น"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="notes">
-                            <span class="material-symbols-outlined">notes</span> หมายเหตุ
-                        </label>
-                        <textarea id="notes" name="notes" placeholder="ระบุหมายเหตุ (ถ้ามี)"></textarea>
-                    </div>
-                </div>
-
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    <span class="material-symbols-outlined">save</span> บันทึกข้อมูล
-                </button>
-            </form>
-        </div>
-
-        <!-- Data Tab -->
-        <div id="data-tab" class="tab-content">
-            <div class="section-title">
-                <span class="material-symbols-outlined">analytics</span> ข้อมูลแผนการผลิต
-            </div>
-            <div class="table-toolbar">
-                <div class="record-count" id="recordCount"></div>
-                <button class="refresh-btn" onclick="loadData()">
-                    <span class="material-symbols-outlined">refresh</span> รีเฟรชข้อมูล
-                </button>
-            </div>
-            <div class="table-container">
-                <table class="data-table" id="dataTable">
-                    <thead>
-                        <tr>
-                            <th onclick="sortTable('index')"><div class="th-content"># <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
-                            <th onclick="sortTable('completionTime')"><div class="th-content">วันที่ <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
-                            <th onclick="sortTable('name')"><div class="th-content">ผู้บันทึก <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
-                            <th onclick="sortTable('representative')"><div class="th-content">ผู้แทนจำหน่าย <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
-                            <th onclick="sortTable('salesRegion')"><div class="th-content">เขตการขาย <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
-                            <th onclick="sortTable('productType')"><div class="th-content">ชนิด <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
-                            <th onclick="sortTable('blockThickness')"><div class="th-content">ความหนา <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
-                            <th onclick="sortTable('quantity')"><div class="th-content">จำนวน (ก้อน) <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
-                            <th onclick="sortTable('plant')"><div class="th-content">โรงงาน <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
-                            <th onclick="sortTable('m2')"><div class="th-content">พื้นที่ (sq.m.) <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
-                            <th onclick="sortTable('molds')"><div class="th-content">Molds <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
-                            <th onclick="sortTable('productionRound')"><div class="th-content">รอบผลิต <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
-                            <th onclick="sortTable('urgentCase')"><div class="th-content">เคสด่วน <span class="material-symbols-outlined sort-icon">swap_vert</span></div></th>
-                            <th><div class="th-content">หมายเหตุ</div></th>
-                        </tr>
-                    </thead>
-                    <tbody id="dataTableBody">
-                        <tr>
-                            <td colspan="14" class="empty-state">
-                                <span class="material-symbols-outlined">inbox</span>
-                                <div>คลิก "ดูข้อมูล" เพื่อโหลดข้อมูลจาก Google Sheets</div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="app-footer">
-            <div class="shortcut-keys">
-                <span><kbd>Ctrl</kbd>+<kbd>S</kbd> บันทึก</span>
-                <span><kbd>Ctrl</kbd>+<kbd>R</kbd> รีเฟรช</span>
-                <span><kbd>F5</kbd> ตรวจสอบการเชื่อมต่อ</span>
-            </div>
-        </div>
+    <!-- Status Badge Bottom Right -->
+    <div id="connectionStatus" class="connection-status testing" onclick="retryConnection()" style="display:none;">
+        <span class="material-symbols-outlined">sync</span>
     </div>
 
     <script>
-        // ===== Configuration =====
+        // Configuration
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbytKysrHeaw089wPEcfAiC_Iep2FzDoXI3JDPqzeP4fnVbGi6CC97dtzE9wtDz6eGc5/exec';
-        let connectionStatus = 'testing';
-
-        // State สำหรับเก็บข้อมูลและสถานะการ Sort
-        let tableData = [];
+        
+        // App State
+        let tableData = [];      // Original raw data
+        let filteredData = [];   // Data currently displayed
         let currentSortCol = '';
         let sortAscending = true;
+        let connectionStatus = 'testing';
+        
+        // Pagination State
+        let currentPage = 1;
+        let pageSize = 100;
 
-        // ===== Utility: Format number with commas =====
-        function formatNumberWithCommas(num) {
-            if (num === null || num === undefined || num === '') return '';
+        // ===== Utils =====
+        const formatNumber = (num) => {
+            if (num == null || num === '') return '';
             const n = parseFloat(num);
-            if (isNaN(n)) return '';
-            return n.toLocaleString('en-US');
-        }
+            return isNaN(n) ? '' : n.toLocaleString('en-US');
+        };
 
-        // ===== Utility: Adaptive Date Formatting (แก้ปัญหาข้อมูล พ.ศ./ค.ศ. ปนกัน) =====
-        // ฟังก์ชันนี้จะแปลง string ให้เป็น Date Object พื้นฐานที่เป็น ค.ศ. เสมอ
-        function parseMixedDate(dateString) {
+        const escapeHtml = (str) => {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, m => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+            })[m]);
+        };
+
+        // Date Parser for Mixed B.E. / C.E.
+        const parseMixedDate = (dateString) => {
             if (!dateString) return null;
             let d = new Date(dateString);
             if (isNaN(d.getTime())) return null;
-
-            // ตรวจสอบว่าปีเป็น พ.ศ. หรือไม่ (ปกติ ค.ศ. ปัจจุบันคือ 202x, พ.ศ. คือ 256x)
-            // หากปี > 2400 จะถือว่าเป็นปี พ.ศ. และแปลงกลับเป็น ค.ศ. เพื่อให้ JS จัดการได้ถูกต้อง
             let year = d.getFullYear();
-            if (year > 2400) {
-                d.setFullYear(year - 543);
-            }
+            if (year > 2400) d.setFullYear(year - 543);
             return d;
-        }
-
-        // ฟังก์ชันสำหรับแสดงผลวันที่ตาม System Locale ของผู้ใช้ (พ.ศ. หรือ ค.ศ. ตามที่เครื่องผู้ใช้ตั้งค่าไว้)
-        function formatAdaptiveDate(dateString, includeTime = false) {
-            const d = parseMixedDate(dateString);
-            if (!d) return '-';
-
-            const options = { year: 'numeric', month: 'short', day: 'numeric' };
-            if (includeTime) {
-                options.hour = '2-digit';
-                options.minute = '2-digit';
-            }
-            
-            // undefined หมายถึงใช้ Default Locale ของเครื่องที่กำลังเปิดดูเว็บ
-            return d.toLocaleString(undefined, options);
-        }
-
-        // ===== Calculate Area and Molds =====
-        const thicknessMultipliers = {
-            7.5: 600, 10: 450, 12.5: 360, 15: 300,
-            17.5: 240, 20: 210, 25: 180
         };
 
-        function calculateAreaAndMolds() {
-            const thickness = parseFloat(document.getElementById('blockThickness').value);
-            const quantity = parseFloat(document.getElementById('quantity').value);
-            const areaField = document.getElementById('m2');
+        const formatAdaptiveDate = (dateString, includeTime = false) => {
+            const d = parseMixedDate(dateString);
+            if (!d) return '-';
+            const opts = { year: 'numeric', month: 'short', day: 'numeric' };
+            if (includeTime) { opts.hour = '2-digit'; opts.minute = '2-digit'; }
+            return d.toLocaleString('th-TH', opts);
+        };
+        
+        // Strip out codes like "M1 ", "M2 " to just keep region name
+        const formatRegion = (regionStr) => {
+            if (!regionStr) return '-';
+            return regionStr.replace(/^M\d\s+/, '');
+        };
+
+        // ===== Logic =====
+        const thicknessMultipliers = { 7.5: 600, 10: 450, 12.5: 360, 15: 300, 17.5: 240, 20: 210, 25: 180 };
+
+        function calculateValues(source) {
+            const quantityInput = document.getElementById('quantity');
+            const m2Input = document.getElementById('m2');
             const moldsField = document.getElementById('molds');
+            const thickness = parseFloat(document.getElementById('blockThickness').value);
 
-            if (quantity && !isNaN(quantity) && quantity > 0) {
-                const areaValue = quantity * 0.2 * 0.6;
-                areaField.value = formatNumberWithCommas(areaValue.toFixed(2));
+            let qty = parseFloat(quantityInput.value);
+            let area = parseFloat(m2Input.value);
 
-                areaField.style.backgroundColor = '#e8f5e8';
-                setTimeout(() => { areaField.style.backgroundColor = ''; }, 800);
-
-                if (thickness && thicknessMultipliers[thickness]) {
-                    const moldsValue = quantity / thicknessMultipliers[thickness];
-                    moldsField.value = moldsValue.toFixed(1);
-
-                    moldsField.style.backgroundColor = '#e8f5e8';
-                    setTimeout(() => { moldsField.style.backgroundColor = ''; }, 800);
+            // คำนวณระหว่าง ก้อน <--> sq.m.
+            if (source === 'qty') {
+                if (!isNaN(qty) && qty > 0) {
+                    area = qty / 8.333;
+                    m2Input.value = area.toFixed(2);
                 } else {
-                    moldsField.value = '';
+                    m2Input.value = '';
+                    area = NaN;
                 }
+            } else if (source === 'm2') {
+                if (!isNaN(area) && area > 0) {
+                    qty = Math.ceil(area * 8.333);
+                    quantityInput.value = qty;
+                } else {
+                    quantityInput.value = '';
+                    qty = NaN;
+                }
+            }
+
+            // คำนวณ Molds อัตโนมัติจาก จำนวนก้อน และ ความหนา
+            if (!isNaN(qty) && qty > 0 && thickness && thicknessMultipliers[thickness]) {
+                moldsField.value = (qty / thicknessMultipliers[thickness]).toFixed(1);
             } else {
-                areaField.value = '';
                 moldsField.value = '';
             }
         }
 
-        // ===== Generate Random ID =====
-        function generateRandomId() {
-            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-            let result = '';
-            for (let i = 0; i < 8; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
-
-        // ===== Connection Status =====
-        function updateConnectionStatus(status, message) {
-            const el = document.getElementById('connectionStatus');
-            connectionStatus = status;
-            el.className = `connection-status ${status}`;
-            
-            let icon = 'sync';
-            if(status === 'connected') icon = 'check_circle';
-            if(status === 'disconnected') icon = 'cancel';
-
-            el.innerHTML = `<span class="material-symbols-outlined">${icon}</span> ${message}`;
-
-            if (status === 'connected') {
-                setTimeout(() => {
-                    el.style.opacity = '0';
-                    setTimeout(() => { el.style.display = 'none'; }, 300);
-                }, 3000);
-            } else {
-                el.style.opacity = '1';
-                el.style.display = 'flex';
-            }
-        }
-
-        async function testConnection() {
-            try {
-                updateConnectionStatus('testing', 'กำลังตรวจสอบ...');
-                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=test', {
-                    method: 'GET', mode: 'cors'
-                });
-                if (response.ok) {
-                    await response.json();
-                    updateConnectionStatus('connected', 'เชื่อมต่อสำเร็จ');
-                    return true;
-                } else {
-                    throw new Error('HTTP ' + response.status);
-                }
-            } catch (error) {
-                console.error('Connection test failed:', error);
-                updateConnectionStatus('disconnected', 'เชื่อมต่อล้มเหลว');
-                return false;
-            }
-        }
-
-        async function retryConnection() {
-            updateConnectionStatus('testing', 'กำลังเชื่อมต่อใหม่...');
-            return await testConnection();
-        }
-
-        // ===== SweetAlert Helpers =====
-        function showLoading(message = 'กำลังประมวลผล...') {
-            Swal.fire({
-                title: message,
-                html: '<div class="loading-spinner"></div>',
-                showConfirmButton: false,
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            });
-        }
-
-        function showSuccess(title, message) {
-            Swal.fire({
-                icon: 'success', title: title, text: message,
-                confirmButtonText: 'ตกลง', timer: 3000, timerProgressBar: true
-            });
-        }
-
-        function showError(title, message) {
-            Swal.fire({
-                icon: 'error', title: title, text: message,
-                confirmButtonText: 'ตกลง',
-                footer: 'หากปัญหายังคงมีอยู่ กรุณาติดต่อผู้ดูแลระบบ'
-            });
-        }
-
-        function showConfirmation(title, message) {
-            return Swal.fire({
-                title: title, text: message, icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'ใช่, ดำเนินการ',
-                cancelButtonText: 'ยกเลิก',
-                reverseButtons: true
-            });
-        }
-
-        function showInfo(title, message) {
-            Swal.fire({ icon: 'info', title: title, text: message, confirmButtonText: 'ตกลง' });
-        }
-
-        // ===== Tab Switching =====
+        // ===== UI & Navigation =====
         function showTab(tabName, btnElement) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
-
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+            
             document.getElementById(tabName + '-tab').classList.add('active');
             btnElement.classList.add('active');
 
-            if (tabName === 'data' && tableData.length === 0) {
-                loadData();
+            // Manage Filter Section visibility
+            const filterSec = document.getElementById('filterSection');
+            if (tabName === 'data') {
+                filterSec.style.display = 'flex';
+                if (tableData.length === 0) loadData();
+            } else {
+                filterSec.style.display = 'none';
             }
         }
 
-        // ===== Form Validation =====
-        function validateForm() {
-            const fields = [
-                { id: 'completionTime', label: 'วันที่' },
-                { id: 'name', label: 'ผู้บันทึก' },
-                { id: 'representative', label: 'ชื่อผู้แทนจำหน่าย' },
-                { id: 'salesRegion', label: 'เขตการขาย' },
-                { id: 'productType', label: 'ชนิดสินค้า' },
-                { id: 'blockThickness', label: 'ความหนา Block' },
-                { id: 'quantity', label: 'จำนวน (ก้อน)' },
-                { id: 'plant', label: 'โรงงาน' }
-            ];
-            const missing = [];
-            fields.forEach(f => {
-                const el = document.getElementById(f.id);
-                if (!el.value || !el.value.trim()) {
-                    missing.push(f.label);
-                    el.style.borderColor = 'var(--danger)';
-                    setTimeout(() => { el.style.borderColor = ''; }, 3000);
-                }
+        // ===== Resizable Columns =====
+        function makeTableResizable() {
+            const cols = document.querySelectorAll('#dataTable th');
+            cols.forEach(col => {
+                const existing = col.querySelector('.resizer');
+                if (existing) existing.remove();
+
+                const resizer = document.createElement('div');
+                resizer.classList.add('resizer');
+                col.appendChild(resizer);
+                createResizableColumn(col, resizer);
             });
-            if (missing.length > 0) {
-                showError('ข้อมูลไม่ครบถ้วน', 'กรุณากรอก: ' + missing.join(', '));
+        }
+
+        function createResizableColumn(col, resizer) {
+            let x = 0;
+            let w = 0;
+            
+            const mouseDownHandler = function(e) {
+                e.stopPropagation();
+                
+                x = e.clientX;
+                const styles = window.getComputedStyle(col);
+                w = parseInt(styles.width, 10);
+                
+                document.addEventListener('mousemove', mouseMoveHandler);
+                document.addEventListener('mouseup', mouseUpHandler);
+                resizer.classList.add('resizing');
+            };
+            
+            const mouseMoveHandler = function(e) {
+                const dx = e.clientX - x;
+                col.style.width = `${w + dx}px`;
+            };
+            
+            const mouseUpHandler = function() {
+                resizer.classList.remove('resizing');
+                document.removeEventListener('mousemove', mouseMoveHandler);
+                document.removeEventListener('mouseup', mouseUpHandler);
+            };
+            
+            resizer.addEventListener('mousedown', mouseDownHandler);
+            resizer.addEventListener('click', e => e.stopPropagation());
+        }
+
+        // ===== Connection Check =====
+        async function testConnection() {
+            try {
+                const el = document.getElementById('connectionStatus');
+                el.style.display = 'flex';
+                el.className = 'connection-status testing';
+                el.innerHTML = '<span class="material-symbols-outlined">sync</span> กำลังตรวจสอบ...';
+                
+                const res = await fetch(GOOGLE_SCRIPT_URL + '?action=test', { method: 'GET', mode: 'cors' });
+                if (res.ok) {
+                    el.className = 'connection-status connected';
+                    el.innerHTML = '<span class="material-symbols-outlined">cloud_done</span> เชื่อมต่อแล้ว';
+                    setTimeout(() => el.style.display = 'none', 3000);
+                    connectionStatus = 'connected';
+                    return true;
+                }
+                throw new Error('Fail');
+            } catch(e) {
+                const el = document.getElementById('connectionStatus');
+                el.className = 'connection-status disconnected';
+                el.innerHTML = '<span class="material-symbols-outlined">cloud_off</span> ออฟไลน์';
+                el.style.display = 'flex';
+                connectionStatus = 'disconnected';
                 return false;
             }
-            return true;
         }
+
+        async function retryConnection() { await testConnection(); }
 
         // ===== Form Submit =====
         document.getElementById('productionForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            if(!this.checkValidity()) return;
 
-            if (!validateForm()) return;
-
-            if (connectionStatus === 'disconnected') {
-                const retry = await showConfirmation('การเชื่อมต่อล้มเหลว', 'ต้องการลองเชื่อมต่อใหม่หรือไม่?');
-                if (retry.isConfirmed) {
-                    if (!await testConnection()) {
-                        showError('ไม่สามารถเชื่อมต่อได้', 'กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่');
-                        return;
-                    }
-                } else { return; }
-            }
-
-            const confirmResult = await showConfirmation('ยืนยันการบันทึก', 'ต้องการบันทึกข้อมูลแผนการผลิตนี้?');
-            if (!confirmResult.isConfirmed) return;
-
+            const btn = document.getElementById('submitBtn');
             const formData = new FormData(this);
-            const data = { id: generateRandomId(), action: 'save' };
-
+            const data = { 
+                id: Math.random().toString(36).substr(2, 9), 
+                action: 'save' 
+            };
+            
             for (let [key, value] of formData.entries()) {
                 data[key] = value;
             }
-
-            // Clean m2: remove commas before sending
             if (data.m2) data.m2 = data.m2.replace(/,/g, '');
 
-            const submitBtn = document.getElementById('submitBtn');
-
             try {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span class="material-symbols-outlined" style="animation: spin 1s linear infinite;">sync</span> กำลังบันทึก...';
-                showLoading('กำลังบันทึกข้อมูลไปยัง Google Sheets...');
-
+                btn.disabled = true;
+                btn.innerHTML = '<span class="material-symbols-outlined" style="animation: spin 1s linear infinite;">sync</span> บันทึก...';
+                
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST', mode: 'cors', cache: 'no-cache',
-                    headers: { 'Content-Type': 'text/plain' },
+                    method: 'POST', mode: 'cors',
                     body: JSON.stringify(data)
                 });
 
-                if (!response.ok) throw new Error('HTTP error: ' + response.status);
-
-                const result = await response.json();
-                Swal.close();
-
-                if (result.success) {
-                    showSuccess('บันทึกสำเร็จ!', 'ID: ' + data.id + ' บันทึกเรียบร้อยแล้ว');
-                    this.reset();
-                    setDefaultDateTime();
-                    updateConnectionStatus('connected', 'เชื่อมต่อสำเร็จ');
-                    // Reset table data so it fetches fresh data next time
-                    tableData = []; 
-                } else {
-                    showError('เกิดข้อผิดพลาด', result.message || 'ไม่สามารถบันทึกได้');
-                }
-            } catch (error) {
-                Swal.close();
-                console.error('Save error:', error);
-                updateConnectionStatus('disconnected', 'เชื่อมต่อล้มเหลว');
-                showError('เชื่อมต่อล้มเหลว', 'ไม่สามารถเชื่อมต่อกับ Google Sheets ได้ กรุณาตรวจสอบอินเทอร์เน็ต');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                
+                Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', timer: 2000, showConfirmButton: false });
+                this.reset();
+                setDefaultDateTime();
+                tableData = []; // Clear cache to force reload next time
+                
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: 'ไม่สามารถบันทึกได้ กรุณาลองใหม่' });
+                testConnection();
             } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span class="material-symbols-outlined">save</span> บันทึกข้อมูล';
+                btn.disabled = false;
+                btn.innerHTML = '<span class="material-symbols-outlined">save</span> บันทึกข้อมูล';
             }
         });
 
+        // ===== Filters Generation =====
+        function populateFilterDropdowns(data) {
+            const years = new Set();
+            const regions = new Set();
+            const products = new Set();
+            const plants = new Set();
+
+            data.forEach(item => {
+                const d = parseMixedDate(item.completionTime);
+                if (d) years.add(d.getFullYear());
+                if (item.salesRegion) regions.add(item.salesRegion);
+                if (item.productType) products.add(item.productType);
+                if (item.plant) plants.add(item.plant);
+            });
+
+            const yearSel = document.getElementById('filterYear');
+            yearSel.innerHTML = '<option value="">ทั้งหมด</option>';
+            Array.from(years).sort().reverse().forEach(y => {
+                yearSel.innerHTML += `<option value="${y}">${y}</option>`;
+            });
+
+            const fillSelect = (id, set, formatter = escapeHtml) => {
+                const sel = document.getElementById(id);
+                sel.innerHTML = '<option value="">ทั้งหมด</option>';
+                Array.from(set).sort().forEach(val => {
+                    sel.innerHTML += `<option value="${val}">${formatter(val)}</option>`;
+                });
+            };
+
+            // Apply formatting only for display in dropdown, value stays original
+            fillSelect('filterRegion', regions, formatRegion);
+            fillSelect('filterProduct', products);
+            fillSelect('filterPlant', plants);
+        }
+
+        // ===== Filter Logic =====
+        function applyFilters() {
+            const y = document.getElementById('filterYear').value;
+            const m = document.getElementById('filterMonth').value;
+            const r = document.getElementById('filterRegion').value;
+            const pType = document.getElementById('filterProduct').value;
+            const plant = document.getElementById('filterPlant').value;
+
+            filteredData = tableData.filter(item => {
+                let match = true;
+                
+                const d = parseMixedDate(item.completionTime);
+                if (y && (!d || d.getFullYear().toString() !== y)) match = false;
+                if (m && (!d || (d.getMonth() + 1).toString() !== m)) match = false;
+                
+                if (r && item.salesRegion !== r) match = false;
+                if (pType && item.productType !== pType) match = false;
+                if (plant && item.plant !== plant) match = false;
+
+                return match;
+            });
+
+            currentPage = 1; // Reset to page 1 on filter
+            if(currentSortCol) {
+                doSort(currentSortCol, sortAscending); // doSort will call renderTable
+            } else {
+                renderTable();
+            }
+        }
+
+        function clearFilters() {
+            document.getElementById('filterYear').value = '';
+            document.getElementById('filterMonth').value = '';
+            document.getElementById('filterRegion').value = '';
+            document.getElementById('filterProduct').value = '';
+            document.getElementById('filterPlant').value = '';
+            applyFilters();
+        }
+
         // ===== Load Data =====
         async function loadData() {
-            const tableBody = document.getElementById('dataTableBody');
-            const recordCount = document.getElementById('recordCount');
-
+            const tbody = document.getElementById('dataTableBody');
+            tbody.innerHTML = '<tr><td colspan="14" style="text-align:center;padding:40px;"><div class="loading-spinner"></div></td></tr>';
+            document.getElementById('paginationControls').style.display = 'none';
+            
             try {
-                tableBody.innerHTML = '<tr><td colspan="14" style="text-align:center;padding:50px;"><div class="loading-spinner"></div><div style="margin-top:16px;color:var(--gray-dark);">กำลังโหลดข้อมูล...</div></td></tr>';
-                recordCount.textContent = '';
-
-                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=load', {
-                    method: 'GET', mode: 'cors', cache: 'no-cache'
-                });
-
-                if (!response.ok) throw new Error('HTTP error: ' + response.status);
-
-                const result = await response.json();
-
-                if (result.success && result.data && result.data.length > 0) {
-                    // Map data to include original index for stable sorting fallback
-                    tableData = result.data.map((item, index) => ({...item, originalIndex: index}));
+                const res = await fetch(GOOGLE_SCRIPT_URL + '?action=load', { cache: 'no-cache' });
+                const result = await res.json();
+                
+                if (result.success && result.data) {
+                    tableData = result.data.map((item, idx) => ({...item, originalIndex: idx}));
+                    filteredData = [...tableData];
                     
-                    // Reset sort state when loading new data
-                    currentSortCol = '';
-                    resetSortIcons();
+                    populateFilterDropdowns(tableData);
                     
-                    renderTable();
-                    updateConnectionStatus('connected', 'เชื่อมต่อสำเร็จ');
+                    // ตั้งค่าเรียงลำดับเริ่มต้น: วันที่ (ล่าสุดอยู่บนสุด)
+                    currentSortCol = 'completionTime';
+                    sortAscending = false;
 
-                    Swal.fire({
-                        toast: true, position: 'top-end', icon: 'success',
-                        title: 'โหลดสำเร็จ (' + result.data.length + ' รายการ)',
-                        showConfirmButton: false, timer: 2000
-                    });
+                    // เริ่มต้นด้วยการ filter ปีปัจจุบัน
+                    const currentYear = new Date().getFullYear().toString();
+                    const yearSelect = document.getElementById('filterYear');
+                    // เช็คว่ามีปีปัจจุบันในตัวเลือกหรือไม่
+                    if(Array.from(yearSelect.options).some(opt => opt.value === currentYear)) {
+                        yearSelect.value = currentYear;
+                    }
+
+                    applyFilters(); // Apply filter ปีปัจจุบัน
+                    testConnection();
                 } else {
-                    tableData = [];
-                    renderTable();
-                    updateConnectionStatus('connected', 'เชื่อมต่อสำเร็จ');
-                    showInfo('ไม่มีข้อมูล', 'ยังไม่มีข้อมูลแผนการผลิตในระบบ');
+                    throw new Error('No data');
                 }
-            } catch (error) {
-                console.error('Load error:', error);
-                tableBody.innerHTML = '<tr><td colspan="14" class="empty-state" style="color:var(--danger);"><span class="material-symbols-outlined">warning</span><div>เกิดข้อผิดพลาดในการโหลดข้อมูล</div></td></tr>';
-                recordCount.textContent = '';
-                updateConnectionStatus('disconnected', 'เชื่อมต่อล้มเหลว');
-                showError('โหลดข้อมูลล้มเหลว', 'กรุณาตรวจสอบการเชื่อมต่อแล้วลองใหม่');
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="14" class="empty-state" style="color:var(--danger)"><span class="material-symbols-outlined">error</span><div>ไม่สามารถโหลดข้อมูลได้</div></td></tr>';
             }
+        }
+
+        // ===== Pagination Helpers =====
+        function updatePaginationUI(start, end, total) {
+            const info = document.getElementById('pageInfo');
+            if (pageSize === 'all' || total === 0) {
+                info.textContent = `แสดงทั้งหมด ${total} รายการ`;
+                document.getElementById('btnPrevPage').disabled = true;
+                document.getElementById('btnNextPage').disabled = true;
+            } else {
+                info.textContent = `แสดง ${start + 1}-${end} จาก ${total} รายการ`;
+                document.getElementById('btnPrevPage').disabled = currentPage === 1;
+                document.getElementById('btnNextPage').disabled = end >= total;
+            }
+        }
+
+        function changePage(offset) {
+            currentPage += offset;
+            renderTable();
+        }
+
+        function changePageSize() {
+            pageSize = document.getElementById('pageSize').value;
+            currentPage = 1;
+            renderTable();
         }
 
         // ===== Render Table =====
         function renderTable() {
-            const tableBody = document.getElementById('dataTableBody');
-            const recordCount = document.getElementById('recordCount');
+            const tbody = document.getElementById('dataTableBody');
+            const totalRecords = filteredData.length;
+            document.getElementById('recordCount').textContent = `พบ ${totalRecords} รายการ`;
 
-            if (tableData.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="14" class="empty-state"><span class="material-symbols-outlined">inbox</span><div>ยังไม่มีข้อมูลในระบบ</div></td></tr>';
-                recordCount.textContent = 'ไม่มีข้อมูล';
+            if (totalRecords === 0) {
+                tbody.innerHTML = '<tr><td colspan="14" class="empty-state"><span class="material-symbols-outlined">search_off</span><div>ไม่พบข้อมูลที่ตรงกับเงื่อนไข</div></td></tr>';
+                document.getElementById('paginationControls').style.display = 'none';
+                makeTableResizable();
                 return;
             }
 
-            tableBody.innerHTML = '';
-            tableData.forEach((item, displayIndex) => {
-                const row = document.createElement('tr');
+            // Pagination Logic
+            let startIdx = 0;
+            let endIdx = totalRecords;
+            let displayData = filteredData;
 
-                const qtyFormatted = formatNumberWithCommas(item.quantity);
-                const m2Formatted = formatNumberWithCommas(parseFloat(item.m2 || 0).toFixed(2));
-                const moldsFormatted = item.molds ? parseFloat(item.molds).toFixed(1) : '-';
-
-                let urgentHtml = '';
-                if (item.urgentCase && item.urgentCase.trim()) {
-                    urgentHtml = `<span class="urgent-badge" title="${escapeHtml(item.urgentCase)}">
-                        <span class="material-symbols-outlined">emergency</span> ${escapeHtml(item.urgentCase)}
-                    </span>`;
-                } else {
-                    urgentHtml = '<span class="urgent-normal">-</span>';
-                }
-
-                // Use the new Adaptive Date formatting
-                const compTimeStr = formatAdaptiveDate(item.completionTime, true);
-                const prodRoundStr = formatAdaptiveDate(item.productionRound, false);
-
-                row.innerHTML = `
-                    <td>${displayIndex + 1}</td>
-                    <td title="${escapeHtml(item.completionTime || '')}">${compTimeStr}</td>
-                    <td title="${escapeHtml(item.name || '')}">${escapeHtml(item.name || '-')}</td>
-                    <td title="${escapeHtml(item.representative || '')}">${escapeHtml(item.representative || '-')}</td>
-                    <td>${escapeHtml(item.salesRegion || '-')}</td>
-                    <td>${escapeHtml(item.productType || '-')}</td>
-                    <td class="num">${escapeHtml(item.blockThickness || '-')}</td>
-                    <td class="num">${qtyFormatted}</td>
-                    <td title="${escapeHtml(item.plant || '')}">${escapeHtml(item.plant || '-')}</td>
-                    <td class="num">${m2Formatted}</td>
-                    <td class="num">${moldsFormatted}</td>
-                    <td>${prodRoundStr}</td>
-                    <td>${urgentHtml}</td>
-                    <td title="${escapeHtml(item.notes || '')}">${escapeHtml(item.notes || '-')}</td>
-                `;
-
-                tableBody.appendChild(row);
-            });
-
-            recordCount.textContent = 'ทั้งหมด ' + tableData.length + ' รายการ';
-        }
-
-        // ===== Sorting Logic =====
-        function sortTable(column) {
-            if (tableData.length === 0) return;
-
-            if (currentSortCol === column) {
-                sortAscending = !sortAscending; // Toggle direction
-            } else {
-                currentSortCol = column;
-                sortAscending = true; // Default to asc for new column
+            if (pageSize !== 'all') {
+                const size = parseInt(pageSize, 10);
+                startIdx = (currentPage - 1) * size;
+                endIdx = Math.min(startIdx + size, totalRecords);
+                displayData = filteredData.slice(startIdx, endIdx);
             }
 
-            tableData.sort((a, b) => {
-                let valA = a[column];
-                let valB = b[column];
+            document.getElementById('paginationControls').style.display = 'flex';
+            updatePaginationUI(startIdx, endIdx, totalRecords);
 
-                // Handle index (special case)
-                if (column === 'index') {
-                    valA = a.originalIndex;
-                    valB = b.originalIndex;
-                }
+            let html = '';
+            displayData.forEach((item, index) => {
+                const displayRowIndex = startIdx + index + 1;
+                const urg = item.urgentCase 
+                    ? `<span class="urgent-badge" title="${escapeHtml(item.urgentCase)}"><span class="material-symbols-outlined" style="font-size:12px">emergency</span> ${escapeHtml(item.urgentCase)}</span>` 
+                    : `<span class="urgent-normal">-</span>`;
+                
+                html += `
+                    <tr>
+                        <td class="col-id">${displayRowIndex}</td>
+                        <td class="col-date">${formatAdaptiveDate(item.completionTime, false)}</td>
+                        <td class="col-name">${escapeHtml(item.name)}</td>
+                        <td class="col-rep">${escapeHtml(item.representative)}</td>
+                        <td class="col-region">${formatRegion(item.salesRegion)}</td>
+                        <td class="col-type">${escapeHtml(item.productType)}</td>
+                        <td class="col-thick">${escapeHtml(item.blockThickness)}</td>
+                        <td class="col-qty">${formatNumber(item.quantity)}</td>
+                        <td class="col-plant">${escapeHtml(item.plant)}</td>
+                        <td class="col-area">${formatNumber(item.m2)}</td>
+                        <td class="col-molds">${item.molds ? parseFloat(item.molds).toFixed(1) : '-'}</td>
+                        <td class="col-round">${escapeHtml(item.productionRound || '-')}</td>
+                        <td class="col-urgent">${urg}</td>
+                        <td class="col-notes">${escapeHtml(item.notes)}</td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+            
+            // Re-initialize resizers after table content changes
+            makeTableResizable();
+        }
 
-                // Handle missing values
-                if (valA === null || valA === undefined || valA === '') valA = sortAscending ? '\uFFFF' : '';
-                if (valB === null || valB === undefined || valB === '') valB = sortAscending ? '\uFFFF' : '';
+        // ===== Sorting =====
+        function sortTable(column) {
+            if (filteredData.length === 0) return;
+            sortAscending = (currentSortCol === column) ? !sortAscending : true;
+            currentSortCol = column;
+            doSort(column, sortAscending);
+        }
 
-                let result = 0;
+        function doSort(column, isAsc) {
+            filteredData.sort((a, b) => {
+                let vA = a[column]; let vB = b[column];
+                if (vA == null || vA === '') vA = isAsc ? '\uFFFF' : '';
+                if (vB == null || vB === '') vB = isAsc ? '\uFFFF' : '';
 
-                // Numeric sorting
-                if (['quantity', 'blockThickness', 'm2', 'molds', 'index'].includes(column)) {
-                    const numA = parseFloat(valA);
-                    const numB = parseFloat(valB);
-                    if (!isNaN(numA) && !isNaN(numB)) {
-                        result = numA - numB;
-                    } else {
-                        result = String(valA).localeCompare(String(valB));
-                    }
+                if (['quantity', 'blockThickness', 'm2', 'molds', 'originalIndex'].includes(column)) {
+                    return isAsc ? parseFloat(vA) - parseFloat(vB) : parseFloat(vB) - parseFloat(vA);
                 } 
-                // Date sorting
-                else if (['completionTime', 'productionRound'].includes(column)) {
-                    const dateA = parseMixedDate(valA) ? parseMixedDate(valA).getTime() : 0;
-                    const dateB = parseMixedDate(valB) ? parseMixedDate(valB).getTime() : 0;
-                    result = dateA - dateB;
+                if (['completionTime'].includes(column)) {
+                    const dA = parseMixedDate(vA)?.getTime() || 0;
+                    const dB = parseMixedDate(vB)?.getTime() || 0;
+                    return isAsc ? dA - dB : dB - dA;
                 }
-                // String sorting
-                else {
-                    result = String(valA).localeCompare(String(valB), 'th');
-                }
-
-                return sortAscending ? result : -result;
+                return isAsc ? String(vA).localeCompare(String(vB), 'th') : String(vB).localeCompare(String(vA), 'th');
             });
 
-            updateSortIcons(column, sortAscending);
+            document.querySelectorAll('#dataTable th').forEach(th => {
+                th.classList.remove('active-sort');
+                const icon = th.querySelector('.sort-icon');
+                if (icon) icon.textContent = 'swap_vert';
+                
+                if (th.getAttribute('onclick')?.includes(`'${column}'`)) {
+                    th.classList.add('active-sort');
+                    icon.textContent = isAsc ? 'arrow_upward' : 'arrow_downward';
+                }
+            });
+
             renderTable();
         }
 
-        function updateSortIcons(activeCol, isAsc) {
-            const headers = document.querySelectorAll('#dataTable th');
-            
-            headers.forEach((th, index) => {
-                const icon = th.querySelector('.sort-icon');
-                if(!icon) return; // Skip columns without sort icon
-
-                // Derive column key from onclick attribute simply
-                const onclickAttr = th.getAttribute('onclick');
-                if(onclickAttr && onclickAttr.includes(`'${activeCol}'`)) {
-                    th.classList.add('active-sort');
-                    icon.textContent = isAsc ? 'arrow_upward' : 'arrow_downward';
-                } else {
-                    th.classList.remove('active-sort');
-                    icon.textContent = 'swap_vert';
-                }
-            });
-        }
-
-        function resetSortIcons() {
-            const headers = document.querySelectorAll('#dataTable th');
-            headers.forEach(th => {
-                th.classList.remove('active-sort');
-                const icon = th.querySelector('.sort-icon');
-                if(icon) icon.textContent = 'swap_vert';
-            });
-        }
-
-        // ===== Escape HTML to prevent XSS =====
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
-
-        // ===== Set Default DateTime =====
+        // ===== Init =====
         function setDefaultDateTime() {
             const now = new Date();
-            const offset = now.getTimezoneOffset();
-            const localTime = new Date(now.getTime() - (offset * 60000));
-            // Input datetime-local always expects format YYYY-MM-DDThh:mm (C.E.)
-            document.getElementById('completionTime').value = localTime.toISOString().slice(0, 16);
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('completionTime').value = now.toISOString().slice(0, 16);
         }
 
-        // ===== Init on DOMContentLoaded =====
-        document.addEventListener('DOMContentLoaded', async function() {
+        document.addEventListener('DOMContentLoaded', () => {
             setDefaultDateTime();
-
-            // Event listeners for auto-calculation
-            document.getElementById('quantity').addEventListener('input', calculateAreaAndMolds);
-            document.getElementById('blockThickness').addEventListener('change', calculateAreaAndMolds);
-
-            // Test connection
-            const connected = await testConnection();
-
-            if (connected) {
-                Swal.fire({
-                    title: 'ยินดีต้อนรับ!',
-                    text: 'ระบบบันทึกแผนการผลิตพร้อมใช้งานแล้ว',
-                    icon: 'success',
-                    confirmButtonText: 'เริ่มใช้งาน',
-                    timer: 3000,
-                    timerProgressBar: true
-                });
-            } else {
-                Swal.fire({
-                    title: 'การเชื่อมต่อล้มเหลว',
-                    text: 'ไม่สามารถเชื่อมต่อกับ Google Sheets ได้',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'ลองใหม่',
-                    cancelButtonText: 'ดำเนินการต่อ',
-                    footer: 'คุณยังสามารถกรอกข้อมูลได้ แต่อาจไม่สามารถบันทึกได้'
-                }).then(async (result) => {
-                    if (result.isConfirmed) await retryConnection();
-                });
-            }
+            
+            // เปลี่ยน Event Listener เพื่อคำนวณแบบ 2 ทาง
+            document.getElementById('quantity').addEventListener('input', () => calculateValues('qty'));
+            document.getElementById('m2').addEventListener('input', () => calculateValues('m2'));
+            document.getElementById('blockThickness').addEventListener('change', () => calculateValues('qty')); // คำนวณ Molds ใหม่เมื่อเปลี่ยนความหนา
+            
+            makeTableResizable(); // Init on empty table headers
+            setTimeout(testConnection, 500); 
         });
 
-        // ===== Keyboard Shortcuts =====
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                if (document.getElementById('form-tab').classList.contains('active')) {
-                    document.getElementById('productionForm').dispatchEvent(new Event('submit', { cancelable: true }));
-                }
-            }
-            if (e.ctrlKey && e.key === 'r') {
-                e.preventDefault();
-                if (document.getElementById('data-tab').classList.contains('active')) {
-                    loadData();
-                }
-            }
-            if (e.key === 'F5') {
-                e.preventDefault();
-                retryConnection();
-            }
-        });
-
-        // ===== Click connection status to retry =====
-        document.getElementById('connectionStatus').addEventListener('click', async function() {
-            if (connectionStatus === 'disconnected') await retryConnection();
-        });
-
-        // ===== Auto-retry every 30s =====
-        setInterval(async function() {
-            if (connectionStatus === 'disconnected') {
-                console.log('Auto-retrying connection...');
-                await testConnection();
-            }
-        }, 30000);
-
-        // ===== Auto-save to localStorage =====
-        function saveFormDataToLocal() {
-            try {
-                const form = document.getElementById('productionForm');
-                const formData = new FormData(form);
-                const data = {};
-                for (let [key, value] of formData.entries()) {
-                    if (value && value.trim()) data[key] = value;
-                }
-                if (Object.keys(data).length > 0) {
-                    localStorage.setItem('productionFormBackup', JSON.stringify({
-                        data: data, timestamp: new Date().toISOString()
-                    }));
-                }
-            } catch (e) {}
-        }
-
-        setInterval(saveFormDataToLocal, 30000);
-        document.getElementById('productionForm').addEventListener('input', function() {
-            clearTimeout(window.autoSaveTimeout);
-            window.autoSaveTimeout = setTimeout(saveFormDataToLocal, 5000);
-        });
     </script>
 </body>
 </html>
