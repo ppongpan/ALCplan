@@ -633,7 +633,7 @@
                         <div class="form-group">
                             <label for="blockThickness"><span class="material-symbols-outlined">straighten</span> ความหนา <span class="required">*</span></label>
                             <select id="blockThickness" name="blockThickness" required>
-                                <option value="">— เลือก —</option>
+                                <option value="">— เลือก —</option><option value="7.0">7.0</option>
                                 <option value="7.5">7.5</option><option value="10">10</option>
                                 <option value="12.5">12.5</option><option value="15">15</option>
                                 <option value="17.5">17.5</option><option value="20">20</option>
@@ -805,7 +805,7 @@
         };
 
         // ===== Logic =====
-        const thicknessMultipliers = { 7.5: 600, 10: 450, 12.5: 360, 15: 300, 17.5: 240, 20: 210, 25: 180 };
+        const thicknessMultipliers = { 7.0: 660, 7.5: 600, 10: 450, 12.5: 360, 15: 300, 17.5: 240, 20: 210, 25: 180 };
 
         function calculateValues(source) {
             const quantityInput = document.getElementById('quantity');
